@@ -15,8 +15,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+
 # model class
 class User(db.Model):
+    __tablename__ = 'users'
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
@@ -27,6 +30,10 @@ class User(db.Model):
         self.password = password
         self.email = email
 
+    def __repr__(self):
+        return f"<User {self.username}>"
+
+
 # schemas
 class UserSchema(ma.Schema):
     class Meta:
@@ -34,6 +41,7 @@ class UserSchema(ma.Schema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+
 
 # create a user
 @app.route('/user', methods=['POST'])
@@ -48,6 +56,7 @@ def create_user():
 
     return user_schema.jsonify(new_user)
 
+
 # get all users
 @app.route('/user/', methods=['GET'])
 def get_users():
@@ -55,11 +64,13 @@ def get_users():
     result = users_schema.dump(user)
     return jsonify(result)
 
+
 # get one user
 @app.route('/user/<id>', methods=['GET'])
 def get_user(id):
     user = User.query.get(id)
     return user_schema.jsonify(user)
+
 
 # update the user
 @app.route('/user/<id>', methods=['PUT'])
@@ -78,6 +89,7 @@ def update_user(id):
 
     return user_schema.jsonify(user)
 
+
 # delete the user
 @app.route('/user/<id>', methods=['DELETE'])
 def delete_user(id):
@@ -86,6 +98,7 @@ def delete_user(id):
     db.session.commit()
 
     return user_schema.jsonify(user)
+
 
 if __name__ == '__main__':
     app.run()
