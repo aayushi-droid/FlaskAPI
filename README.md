@@ -4,16 +4,21 @@ Crud operations using Flask
 
 ## Get start 
 
+```bash
+python -m pip install requirements.txt
+```
+
 - open python interactive shell 
 
 ```bash
-python -m pip install requirements.txt
 from app import db
 db.create_all()
 exit()
-python app.py
 ```
 
+```bash
+python app.py
+```
 
 ## requirements
 
