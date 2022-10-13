@@ -33,6 +33,22 @@ def get_users():
     result = users_schema.dump(user)
     return jsonify(result)
 
+  # get one user
+@app.route('/user/<id>', methods=['GET'])
+@limiter.exempt
+def get_user(id):
+    """ get user by id """
+    user = User.query.get(id)
+    return user_schema.jsonify(user)
+
+# get all users with custom rate limit
+@app.route('/user/', methods=['GET'])
+@limiter.exempt
+def get_users():
+    """ get all users """
+    user = User.query.all()
+    result = users_schema.dump(user)
+    return jsonify(result)
 @app.route('/user', methods=['POST'])
 @limiter.limit(custom_rate_limit)
 def create_user():
